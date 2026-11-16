@@ -1,239 +1,105 @@
-# ⚡ Zero-Delay Auto-Fill
+# Zero-Delay Auto-Fill Pro
 
-### Lightning-fast, Privacy-First Job Application Auto-Filler
+A privacy-first Chrome extension that fills job application forms instantly with your saved profile. Everything runs and stays on your machine: no servers, no analytics, no network requests.
 
-> A Chrome Extension (Manifest V3) that instantly fills job application forms with your pre-saved profile data. **Zero external requests. Zero latency. 100% local.**
+![Chrome Extension](https://img.shields.io/badge/Chrome_Extension-4285F4?style=flat-square&logo=googlechrome&logoColor=white)
+![Manifest V3](https://img.shields.io/badge/Manifest_V3-34A853?style=flat-square&logo=googlechrome&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript_(strict)-3178C6?style=flat-square&logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite_6-646CFF?style=flat-square&logo=vite&logoColor=white)
+![Web Crypto](https://img.shields.io/badge/Web_Crypto-AES--GCM-6C5CE7?style=flat-square)
 
-[![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white)](https://developer.chrome.com/docs/extensions/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-Strict-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Manifest V3](https://img.shields.io/badge/Manifest-V3-34A853?style=for-the-badge&logo=googlechrome&logoColor=white)](https://developer.chrome.com/docs/extensions/mv3/)
-[![Privacy](https://img.shields.io/badge/Privacy-First-6C5CE7?style=for-the-badge&logo=shield&logoColor=white)](/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-00CEC9?style=for-the-badge)](LICENSE)
+## Why
 
----
+Applying for jobs means typing the same name, email, LinkedIn and GitHub links into dozens of forms. Most auto-fill tools send that data to cloud services or ship heavy frameworks. Zero-Delay takes the opposite approach:
 
-## 🎯 Why Zero-Delay?
-
-Applying to jobs is repetitive. Filling out the same fields — name, email, LinkedIn, GitHub — across dozens of applications wastes hours. Existing auto-fill solutions rely on cloud services, send your data to external servers, or load heavy UI frameworks causing noticeable delays.
-
-**Zero-Delay** solves this with a fundamentally different architecture:
-
-| Feature | Zero-Delay | Others |
+| | Zero-Delay | Typical cloud auto-fill |
 |---|---|---|
-| **Data Storage** | 100% Local (`chrome.storage`) | Cloud servers |
-| **Network Requests** | Zero | Multiple API calls |
-| **UI Framework** | Vanilla TypeScript | React/Vue bundles |
-| **Fill Speed** | Instant (< 5ms) | 200ms–2s |
-| **Privacy** | Your data never leaves your machine | Data uploaded to third parties |
+| Data storage | `chrome.storage.local` on your device | Remote servers |
+| Network requests | None | API calls on every fill |
+| UI | Vanilla TypeScript, no framework | React / Vue bundles |
+| Encryption | Optional master password (AES-GCM) | Varies |
 
----
+## Features
 
-## ✨ Features
+**Filling**
+- One-click fill from the popup or the right-click menu (**⚡ Auto-Fill This Page**)
+- Smart field recognition with 150+ prioritized regex patterns matched against `name`, `id`, `placeholder`, `aria-label`, `autocomplete` and the field's `<label>`
+- Works with React, Angular and Vue forms by setting values through the native input setter and dispatching `input`, `change` and `blur` events
+- Handles text inputs, dropdowns and checkboxes
+- Remembers field values per website for forms the patterns don't cover
 
-### 🏗️ Architecture
-- **Vanilla TypeScript** — No React, no Vue, no Angular. Pure TypeScript compiled with Vite for maximum performance
-- **Manifest V3** — Built on the latest Chrome Extension architecture with service workers
-- **Zero Dependencies** — No runtime dependencies beyond the Chrome APIs
+**Profiles**
+- Multiple profiles (for example "Frontend", "Backend", "DevOps") with quick switching
+- Full profile editor with grouped fields
 
-### 🔍 Smart Field Recognition
-- **40+ Regex Patterns** — Identifies form fields by analyzing `name`, `id`, `placeholder`, `aria-label`, `autocomplete`, and adjacent `<label>` text
-- **SPA Compatible** — Dispatches native DOM events (`input`, `change`, `blur`) with React's `nativeInputValueSetter` trick for full compatibility with React, Angular, and Vue applications
-- **Select & Checkbox Support** — Handles dropdowns and checkboxes, not just text inputs
+**Security and data**
+- Optional **master password**: data is encrypted with AES-GCM using a key derived via PBKDF2 — implemented with the browser's Web Crypto API, no libraries
+- Built-in secure password generator
+- Backup and restore as JSON, plus optional scheduled automatic backups (configurable interval) to your Downloads folder
 
-### 🔒 Privacy First
-- **Zero External Requests** — All data is stored locally in `chrome.storage.local`
-- **No Analytics** — No tracking, no telemetry, no data collection
-- **Open Source** — Fully auditable codebase
+**Interface**
+- Compact popup with light and dark themes, glassmorphism styling and subtle animations
 
-### 🎨 Premium UI
-- **Light & Dark Mode** — System-aware with manual toggle
-- **Glassmorphism Design** — Modern frosted-glass aesthetic
-- **Micro-Animations** — Smooth transitions, ripple effects, and status indicators
-- **320px Popup** — Compact, non-intrusive interface
+## How It Works
 
-### 👤 Multi-Profile Support
-- Create profiles for different roles: "Frontend Dev", "Backend Dev", "DevOps"
-- Quick-switch between profiles from the popup dropdown
-- Full profile editor with organized fieldsets
-
----
-
-## 🛠️ Tech Stack
-
-| Layer | Technology |
-|---|---|
-| **Language** | TypeScript 5 (strict mode) |
-| **Bundler** | Vite 6 |
-| **Extension** | Chrome Manifest V3 |
-| **Storage** | `chrome.storage.local` |
-| **Styling** | Pure CSS with Custom Properties |
-| **Typography** | Inter (Google Fonts) |
-| **Icons** | Inline SVG |
-
----
-
-## 📁 Project Structure
-
-```
-zero-delay-autofill/
-├── manifest.json               # Chrome Extension manifest (V3)
-├── package.json                # Dependencies & scripts
-├── vite.config.ts              # Multi-entry Vite build
-├── tsconfig.json               # Strict TypeScript config
-├── public/
-│   └── icons/                  # Extension icons (16, 48, 128)
-├── src/
-│   ├── popup/
-│   │   ├── popup.html          # Extension popup shell
-│   │   ├── popup.css           # Full design system
-│   │   └── popup.ts            # UI controller & message passing
-│   ├── background/
-│   │   └── background.ts       # Service worker & initialization
-│   ├── content/
-│   │   ├── content.ts          # Auto-fill engine & DOM injection
-│   │   └── field-patterns.ts   # Regex pattern registry
-│   └── shared/
-│       ├── storage.ts          # chrome.storage.local controller
-│       └── types/
-│           ├── profile.ts      # User profile interfaces
-│           └── messages.ts     # Typed message definitions
-└── dist/                       # Build output
+```text
+Popup (popup.ts) ── or ── Context menu (background.ts)
+          │  chrome.tabs.sendMessage(FILL_FORM)
+          ▼
+Content script (content.ts)
+  1. Scan the page for form fields
+  2. Match each field against field-patterns.ts
+  3. Resolve the value from the active profile or saved site data
+  4. Inject the value and dispatch DOM events
+          │
+          ▼
+chrome.storage.local  ← storage.ts (optionally encrypted by crypto.ts)
 ```
 
----
+## Project Structure
 
-## 🚀 Installation
+```text
+src/
+├── popup/            # popup.html · popup.css · popup.ts (UI controller)
+├── background/       # Service worker: context menu, scheduled auto-backup
+├── content/          # content.ts (fill engine) · field-patterns.ts (pattern registry)
+└── shared/
+    ├── storage.ts    # Profiles, settings, per-site data, backup/restore
+    ├── crypto.ts     # PBKDF2 + AES-GCM encryption, password generator
+    └── types/        # Typed profile and message definitions
+manifest.json         # Manifest V3 configuration
+```
 
-### Prerequisites
-- Node.js 18+
-- npm or yarn
-- Google Chrome browser
+## Installation
 
-### Steps
+**Requirements:** Node.js 18+, Google Chrome
 
 ```bash
-# 1. Clone the repository
-git clone https://github.com/yourusername/zero-delay-autofill.git
-cd zero-delay-autofill
-
-# 2. Install dependencies
+git clone https://github.com/aaas72/zero-delay-autofill-pro.git
+cd zero-delay-autofill-pro
 npm install
-
-# 3. Build the extension
 npm run build
-
-# 4. Load into Chrome
-#    → Open chrome://extensions
-#    → Enable "Developer mode" (toggle in top right)
-#    → Click "Load unpacked"
-#    → Select the `dist/` folder
 ```
 
-### Development Mode
+Then open `chrome://extensions`, enable **Developer mode**, click **Load unpacked** and select the `dist/` folder.
 
-```bash
-# Watch mode — rebuilds on file changes
-npm run dev
-```
+For development, `npm run dev` rebuilds the extension on every change.
 
----
+## Usage
 
-## 📖 Usage
+1. Click the extension icon and open the settings to fill in your profile
+2. Open any job application (LinkedIn, Greenhouse, Lever, Workday and standard HTML forms)
+3. Click **Auto-Fill Form** — or right-click the page and choose **⚡ Auto-Fill This Page**
+4. Review the filled fields before submitting
 
-1. **Click the extension icon** in the Chrome toolbar
-2. **Set up your profile** — Click the ⚙ gear icon and fill in your details
-3. **Navigate to a job application** (LinkedIn, Indeed, Greenhouse, Lever, etc.)
-4. **Click "Auto-Fill Form"** — Watch your data fill in instantly ⚡
-5. **Review & submit** — Always review before submitting
+## Roadmap
 
-### Supported Job Boards
+- [ ] Keyboard shortcut for instant fill
+- [ ] AI-assisted field matching for unusual forms
+- [ ] Resume upload automation
+- [ ] Firefox and Edge support
+- [ ] Cover letter templates
 
-| Platform | Status |
-|---|---|
-| LinkedIn | ✅ Supported |
-| Indeed | ✅ Supported |
-| Glassdoor | ✅ Supported |
-| Greenhouse | ✅ Supported |
-| Lever | ✅ Supported |
-| Workday | ✅ Supported |
-| SmartRecruiters | ✅ Supported |
-| iCIMS | ✅ Supported |
-| BambooHR | ✅ Supported |
-| Ashby | ✅ Supported |
-| Any standard HTML form | ✅ Supported |
+## Author
 
----
-
-## 🗺️ Roadmap
-
-- [ ] **v1.1** — Import/Export profiles as JSON
-- [ ] **v1.2** — Keyboard shortcut for instant fill (`Ctrl+Shift+F`)
-- [ ] **v1.3** — AI-powered field matching using LLM parsing
-- [ ] **v2.0** — Resume PDF auto-upload
-- [ ] **v2.1** — Firefox & Edge browser support
-- [ ] **v2.2** — Cover letter template engine
-- [ ] **v3.0** — Job application tracker dashboard
-
----
-
-## 🏛️ Architecture
-
-```
-┌──────────────────────────────────────────────────────┐
-│                    POPUP (popup.ts)                   │
-│  ┌──────────┐  ┌──────────┐  ┌────────────────────┐  │
-│  │ Profile  │  │  Theme   │  │   Settings Form    │  │
-│  │ Selector │  │  Toggle  │  │   (Profile CRUD)   │  │
-│  └────┬─────┘  └──────────┘  └────────────────────┘  │
-│       │                                               │
-│       │  chrome.tabs.sendMessage                      │
-│       ▼                                               │
-│  ┌─────────────────────────┐                         │
-│  │   "Auto-Fill" Button    │                         │
-│  └────────────┬────────────┘                         │
-└───────────────┼──────────────────────────────────────┘
-                │
-   ┌────────────▼────────────┐
-   │  CONTENT SCRIPT          │
-   │  (content.ts)            │
-   │                          │
-   │  1. Query DOM elements   │
-   │  2. Match field patterns │
-   │  3. Resolve profile data │
-   │  4. Inject values        │
-   │  5. Dispatch DOM events  │
-   └────────────┬─────────────┘
-                │
-   ┌────────────▼────────────┐
-   │  STORAGE                 │
-   │  (chrome.storage.local)  │
-   │                          │
-   │  profiles: { ... }       │
-   │  activeProfileId: "..."  │
-   │  settings: { ... }       │
-   └──────────────────────────┘
-```
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
-
----
-
-<p align="center">
-  Built with ⚡ by a developer who was tired of filling out the same forms.
-</p>
+**Abdellah Sheikh** — [abdellahsheikh.dev](https://abdellahsheikh.dev) · [LinkedIn](https://www.linkedin.com/in/abdellahsheikh)
